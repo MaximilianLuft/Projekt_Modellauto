@@ -1,0 +1,47 @@
+(kicad_sch
+	(version 20250114)
+	(generator "eeschema")
+	(generator_version "9.0")
+	(uuid "cd65e14d-3f52-4bd1-8452-4c717806c7ff")
+	(paper "A4")
+	(lib_symbols)
+	(text "Gruppe:\nAutor:\nVersion:"
+		(exclude_from_sim no)
+		(at 179.07 179.07 0)
+		(effects
+			(font
+				(size 2.54 2.54)
+			)
+			(justify left bottom)
+		)
+		(uuid "7e6e9719-861f-4e27-b728-d6d0f4f6a66d")
+	)
+	(text "Beispielname"
+		(exclude_from_sim no)
+		(at 190.5 190.5 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "921bd0bc-f48a-4ce6-b743-abed055faf37")
+	)
+	(text "MM/DD/YYYY"
+		(exclude_from_sim no)
+		(at 207.01 194.31 0)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify left bottom)
+		)
+		(uuid "e59507e6-f486-4cca-b54e-1de8e7d866dc")
+	)
+	(sheet_instances
+		(path "/"
+			(page "1")
+		)
+	)
+	(embedded_fonts no)
+)
