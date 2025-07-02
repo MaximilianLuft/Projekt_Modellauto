@@ -87,21 +87,22 @@ void setup() {
 }
 
 int count = 0;
+float last_call_time = 0;
+float gap_time = 50; // minimal time between two calls in ms
 
 //interrupt for measuring speed from speed sensor
 void speed_interrupt() {
-  int last_call_time = 0;
-  int start_call_time = millis();
-  int delta_time = start_call_time - last_call_time;
-  int gap_time = 0.01; // minimal time between two calls in ms
+
+  float start_call_time = millis();
+  float delta_time = start_call_time - last_call_time;
+
 
   if (delta_time > gap_time) {
     count++;
-    Serial.println(count);
+    Serial.println(delta_time);
     int speed = 0;
-    return speed;
   }
-  last_call_time = start_call_time
+  last_call_time = start_call_time;
 }
 
 float loopTime = 0;
