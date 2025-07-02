@@ -14,7 +14,6 @@ void servo_set_position(servo_settings_t &s, int pos) {
   // Clamp position within full_left and full_right
   if (pos < s.full_left) pos = s.full_left;
   if (pos > s.full_right) pos = s.full_right;
-
   servo_object.write(pos);        // Move servo to the desired position
 }
 
