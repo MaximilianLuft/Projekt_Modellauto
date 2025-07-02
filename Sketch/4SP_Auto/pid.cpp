@@ -4,16 +4,12 @@
 float pid(pid_settings_t &s, float soll, float in) {
   //code needs to be added here
   float pid;
-
   float  error = soll-in;
-  float T = 1.1;
-  int clamp = 1;
-
-  s.integral += error;
-
-
-  pid = s.p * error + s.i * T * s.integral + s.d * (error - s.last_error)/T;
-  
+  s.clamp = 1;
+  if (!s.clamp) {
+    s.integral += error;
+  }
+  pid = s.p * error + s.clamp * s.i * s.T * s.integral + s.d * (error - s.last_error)/s.T;
   float pidin = pid;
 
   if(pid > s.anti_windup){
@@ -22,14 +18,13 @@ float pid(pid_settings_t &s, float soll, float in) {
   if(pid < -s.anti_windup){
     pid = -s.anti_windup;
   }
-  if(pidin != pid && ((pidin > 0 && error >0)|| (pidin < 0 && error < 0))){
-    clamp = 0;
+  if(pidin != pid && ((pidin >= 0 && error >= 0)|| (pidin <= 0 && error <= 0))){
+    s.clamp = 0;
   }
   else {
-    clamp = 1;
+    s.clamp = 1;
   }
-  pid = s.p * error + clamp * s.i * T * s.integral + s.d * (error - s.last_error)/T;
-
+  s.last_error = error;
 return pid;
 }
 

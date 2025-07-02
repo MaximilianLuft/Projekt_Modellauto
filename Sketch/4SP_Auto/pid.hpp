@@ -11,6 +11,9 @@ struct pid_settings_t{
   float anti_windup;  //Max of integral
   float integral;     //Integration variable (for i component)
   float last_error;   //Last calucalted error (For d component)
+  float clamp;
+  float last_Time;
+  float T;
 };
 
 float pid(pid_settings_t &s, float soll, float in);

@@ -38,12 +38,15 @@ sensor_settings_t right_sensor = {
 
 //the entries should not rearranged (compiler error)
 pid_settings_t direction_control = {
-  .p = 0.4,//startpunkt: 0.7*0.6
-  .i = 0.4,//startpunkt: (0.7*0.6)/(0.5*1.1)
-  .d = 0.15, //startpunkt: 0.125*1.1*0.7*0.6
+  .p = 0.42,//startpunkt: 0.7*0.6
+  .i = 0.7636,//startpunkt: (0.7*0.6)/(0.5*1.1)
+  .d = 0.05775, //startpunkt: 0.125*1.1*0.7*0.6
   .anti_windup = 45.0,
   .integral = 0.0,
-  .last_error = 0.0
+  .last_error = 0.0,
+  .clamp = 1,
+  .last_Time = millis(),
+  .T = 1.0
 };
 
 //the entries should not rearranged (compiler error)
@@ -99,13 +102,17 @@ void speed_interrupt() {
   }
 }
 
+float loopTime = 0;
 
 void loop() {
   //code needs to be added here
+  
   float direction = 0;
   sensor_read(left_sensor);
   sensor_read(right_sensor);
+  direction_control.T = (millis() - direction_control.last_Time)/1000;
   float steer_pid = pid(direction_control, 0.0, right_sensor.value-left_sensor.value);
+  direction_control.last_Time = millis();
   //Serial.println(right_sensor.value-left_sensor.value);
   steer_pid += 90;
   servo_set_position(servo, steer_pid);
@@ -146,7 +153,10 @@ void loop() {
   Serial.println(analogRead(right_sensor.pin));
   Serial.print(",pid:");
   Serial.println(steer_pid);
+  Serial.print("T:");
+  Serial.print(direction_control.T);
   
   //code needs to be added here
   handle_serial_input();
+  
 }
