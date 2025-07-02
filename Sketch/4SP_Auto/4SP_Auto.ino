@@ -38,9 +38,9 @@ sensor_settings_t right_sensor = {
 
 //the entries should not rearranged (compiler error)
 pid_settings_t direction_control = {
-  .p = 0.42,//startpunkt: 0.7*0.6
-  .i = 0.7636,//startpunkt: (0.7*0.6)/(0.5*1.1)
-  .d = 0.05775, //startpunkt: 0.125*1.1*0.7*0.6
+  .p = 0.24,//startpunkt: 0.7*0.6
+  .i = 0.9,//startpunkt: (0.7*0.6)/(0.5*1.1)
+  .d = 0.11, //startpunkt: 0.125*1.1*0.7*0.6
   .anti_windup = 45.0,
   .integral = 0.0,
   .last_error = 0.0,
@@ -119,7 +119,7 @@ void loop() {
 
   //motor_set_speed(motor, 30);  // 50% speed
   //delay(1000);
-  motor_set_speed(motor, 30); // full speed
+  motor_set_speed(motor, 40); // full speed
   //delay(1000);
   
 
