@@ -90,16 +90,18 @@ int count = 0;
 
 //interrupt for measuring speed from speed sensor
 void speed_interrupt() {
-  int state = digitalRead(speed_sense.pin);
-  //Serial.println(state);
-  if(state != speed_sense.last_state){
+  int last_call_time = 0;
+  int start_call_time = millis();
+  int delta_time = start_call_time - last_call_time;
+  int gap_time = 0.01; // minimal time between two calls in ms
+
+  if (delta_time > gap_time) {
     count++;
-    unsigned long now = millis();
-    speed_sense.time_diff = now - speed_sense.last_time;
-    speed_sense.last_time = now;
-    speed_sense.last_state = state;
-    //Serial.println(count);
+    Serial.println(count);
+    int speed = 0;
+    return speed;
   }
+  last_call_time = start_call_time
 }
 
 float loopTime = 0;
@@ -146,7 +148,7 @@ void loop() {
   //Serial.print("dt: ");
   
   //Serial.println(speed_sense.time_diff);
-  
+  /*
   Serial.print(",Left:");
   Serial.println(analogRead(left_sensor.pin));
   Serial.print(",Right:");
@@ -155,7 +157,7 @@ void loop() {
   Serial.println(steer_pid);
   Serial.print("T:");
   Serial.print(direction_control.T);
-  
+  */
   //code needs to be added here
   handle_serial_input();
   
