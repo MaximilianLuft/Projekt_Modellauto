@@ -55,7 +55,7 @@ void help(double in){
   Serial.println("Available commands:");
   Serial.println("setServoPos: set the position of servo");
   Serial.println("setMotorSpeed: set the motor of speed");
-  Serial.println("toggleAnalogPlot: start and stop plot of analog readings");
+  Serial.println("toggleAnalogPlot; start and stop plot of analog readings");
   Serial.println("help: show help");
   Serial.println("");
   Serial.println("END OF HELP");
