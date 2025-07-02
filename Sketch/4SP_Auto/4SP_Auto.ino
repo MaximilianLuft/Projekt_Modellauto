@@ -38,10 +38,10 @@ sensor_settings_t right_sensor = {
 
 //the entries should not rearranged (compiler error)
 pid_settings_t direction_control = {
-  .p = 0.7*0.6,
-  .i = (0.7*0.6)/(0.5*1.1),
-  .d = 0.125*1.1*0.7*0.6,
-  .anti_windup = 50.0,
+  .p = 0.4,//startpunkt: 0.7*0.6
+  .i = 0.4,//startpunkt: (0.7*0.6)/(0.5*1.1)
+  .d = 0.15, //startpunkt: 0.125*1.1*0.7*0.6
+  .anti_windup = 45.0,
   .integral = 0.0,
   .last_error = 0.0
 };
@@ -66,7 +66,8 @@ system_settings_t settings = {
 speed_sense_settings_t speed_sense = {
   .pin = 2,
   .time_diff = 0,
-  .last_time = 0
+  .last_time = 0,
+  .last_state = 0
 };
 
 void setup() {
@@ -86,13 +87,16 @@ int count = 0;
 
 //interrupt for measuring speed from speed sensor
 void speed_interrupt() {
-  unsigned long now = millis();
-  speed_sense.time_diff = now - speed_sense.last_time;
-  speed_sense.last_time = now;
-  count++;
-  //Serial.println(count);
-
-  EIFR = (1 << INTF0);
+  int state = digitalRead(speed_sense.pin);
+  //Serial.println(state);
+  if(state != speed_sense.last_state){
+    count++;
+    unsigned long now = millis();
+    speed_sense.time_diff = now - speed_sense.last_time;
+    speed_sense.last_time = now;
+    speed_sense.last_state = state;
+    //Serial.println(count);
+  }
 }
 
 
@@ -102,7 +106,7 @@ void loop() {
   sensor_read(left_sensor);
   sensor_read(right_sensor);
   float steer_pid = pid(direction_control, 0.0, right_sensor.value-left_sensor.value);
-  Serial.println(right_sensor.value-left_sensor.value);
+  //Serial.println(right_sensor.value-left_sensor.value);
   steer_pid += 90;
   servo_set_position(servo, steer_pid);
 
@@ -133,7 +137,9 @@ void loop() {
   }
   //unsigned long dt = speed_sense.time_diff;
   //Serial.print("dt: ");
+  
   //Serial.println(speed_sense.time_diff);
+  
   Serial.print(",Left:");
   Serial.println(analogRead(left_sensor.pin));
   Serial.print(",Right:");

@@ -8,6 +8,7 @@ struct speed_sense_settings_t{
   unsigned int pin;        //Pin the sensor is connected to
   unsigned int time_diff;  //Difference since last interrupt
   unsigned long last_time; //Last timestamp
+  int last_state;
 };
 
 //Interrupt function to enable the speed measurement
