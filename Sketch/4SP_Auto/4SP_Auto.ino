@@ -38,10 +38,10 @@ sensor_settings_t right_sensor = {
 
 //the entries should not rearranged (compiler error)
 pid_settings_t direction_control = {
-  .p = 0.42,//startpunkt: 0.7*0.6
-  .i = 0.7636,//startpunkt: (0.7*0.6)/(0.5*1.1)
-  .d = 0.05775, //startpunkt: 0.125*1.1*0.7*0.6
-  .anti_windup = 45.0,
+  .p = 0.42,//startpunkt: 0.42
+  .i = 0.7636,//startpunkt: 0.7636
+  .d = 0.05775, //startpunkt: 0.05775
+  .anti_windup = 50.0,
   .integral = 0.0,
   .last_error = 0.0,
   .clamp = 1,
@@ -111,16 +111,42 @@ void loop() {
   sensor_read(left_sensor);
   sensor_read(right_sensor);
   direction_control.T = (millis() - direction_control.last_Time)/1000;
+    
+  int max_speed = 30;
+  int min_speed = 30;
+  /* TEST MIT DAMPING
   float steer_pid = pid(direction_control, 0.0, right_sensor.value-left_sensor.value);
   direction_control.last_Time = millis();
-  //Serial.println(right_sensor.value-left_sensor.value);
-  steer_pid += 90;
-  servo_set_position(servo, steer_pid);
+  
+  //Verlangsamung bei großem fehler
+  float norm_steer = min(1.0, abs(steer_pid) / direction_control.anti_windup);
+  int motor_speed = max_speed - pow(norm_steer, 1.5) * (max_speed - min_speed);
+  motor_set_speed(motor, motor_speed); // full speed
 
-  //motor_set_speed(motor, 30);  // 50% speed
+  //dämpfung bei hohen geschwindigkeiten
+  float speed_factor = (float)(motor_speed - min_speed) / (max_speed - min_speed);
+  float steer_damping = 1.0 - 0.3 * speed_factor;
+  float final_steer = steer_pid * steer_damping + 90;
+  
+  steer_pid += 90;
+  if(right_sensor.value + left_sensor.value > 50){
+    servo_set_position(servo, final_steer);
+  }
+  */
+  //motor_set_speed(motor, max_speed);  // 50% speed
   //delay(1000);
+  
+  //delay(1000);
+  //PID FUNKTIONIERT
+  float steer_pid = pid(direction_control, 0.0, right_sensor.value-left_sensor.value);
+  direction_control.last_Time = millis();
+
+  steer_pid += 90;
+  if(right_sensor.value + left_sensor.value > 50){
+  servo_set_position(servo, steer_pid);
+  }
   motor_set_speed(motor, 30); // full speed
-  //delay(1000);
+
   
 
 
@@ -154,7 +180,8 @@ void loop() {
   Serial.print(",pid:");
   Serial.println(steer_pid);
   Serial.print("T:");
-  Serial.print(direction_control.T);
+  
+  Serial.println(direction_control.T);
   
   //code needs to be added here
   handle_serial_input();
